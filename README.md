@@ -10,7 +10,7 @@ Get your merchant private and public keys from your dashboard.
 ## Step 2: Update your html
 - Copy the checkout.min.js script tag and paste just before the close of body tag.
 ```
-<script src="https://checkout.creditdirect.ng/checkout.min.js" type="application/javascript"></script>
+<script src="https://checkout.creditdirect.ng/bnpl/checkout.min.js" type="application/javascript"></script>
 ```
 - Add an extra button to your checkout page with a click function.
 ```
@@ -48,7 +48,7 @@ const transaction = {
     "totalAmount": 70000,
     "customerEmail": "test1@example.com",
     "customerPhone": "234",
-    "sessionId": generateRandomString(15),
+    "sessionId": generateUniqueSessionId(15),
     "products": [
         {
             "productName": "Iphone",
@@ -66,7 +66,8 @@ const transaction = {
 // configure checkout widget
 let config = {
     publicKey: "YOUR_PUBLIC_KEY_HERE",
-    signature: "YOUR_SIGNED_TRANSACTION_STRING", /** Your will send your transaction to your server and sign it with your private key **/
+    signature: "YOUR_SIGNED_TRANSACTION_STRING", /** Your will send your transaction to your server
+                 and sign it with your private key as explained in Step 3 above **/
     transaction: transaction,
     isLive: false,
     onSuccess: function (response) {
@@ -89,7 +90,7 @@ let config = {
 
 // Generic session id function
 
-function generateRandomString(length) {
+function generateUniqueSessionId(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
     for (let i = 0; i < length; i++) {
