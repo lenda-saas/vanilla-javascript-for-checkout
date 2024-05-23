@@ -81,8 +81,13 @@ let config = {
     onClose: function () {
       console.log('User closed checkout widget.');
     },
-    onError: function () {
-        console.log('error occurred');
+    onPopup: function (response) {
+        console.log(JSON.stringify(response));
+        response: { checkoutTransactionId: 75455457879vjh566 }
+        /**
+            Save this checkoutTransactionId to your database so as to
+            be able to use it to make webhook notification.
+        **/
     }
   };
   connect = new Connect(config);
@@ -102,12 +107,22 @@ function generateUniqueSessionId(length) {
 
 // trigger checkout widget
   function openCheckout() {
+    transaction.sessionId = generateRandomString(15); // generate new session Id each time the popup is triggered
+    config.signature = signTransaction(transaction); // sign the transaction each time the checkout popup is triggered
+    connect = new Connect(config);
+    connect.setup();
     connect.open();
   }
 
 
 ```
 
+## Final Step: Notification
+We send notifications for events that occur during the customer checkout process via a webhook notification system. Below are the events that can occur during the checkout process:
+
+`Checkout_Customer_Payment_Completed`: Customer completed the checkout process 🎉 and is redirected back to the merchant store provide link 
+
+`Checkout_Merchant_Payment_Completed`: Payment has been successful made to the merchant store
 
 And that's all!!! You are all set. 
 
