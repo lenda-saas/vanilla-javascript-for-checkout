@@ -126,6 +126,6 @@ And that's all!!! You are all set.
 
 
 ## Reference
-[Checkout Webhook Verification](https://developer.lendastack.io/products-guide/webhooks/webhooks-verification)
+[Checkout Webhook Verification](https://developer.lendastack.io/products-guide/webhooks/webhooks-verification.)
 
 
