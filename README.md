@@ -70,12 +70,10 @@ let config = {
                  and sign it with your private key as explained in Step 3 above **/
     transaction: transaction,
     isLive: false,
-    onSuccess: function (response) {
-      console.log(JSON.stringify(response));
+    onSuccess: function () {
       /** 
-        response: { checkoutTransactionId: 75455457879vjh566 }
-        send this checkoutTransactionId back to your server to 
-        finalise payout with webhook.
+        send this checkoutTransactionId back to your server to listen to 
+         payout notification with webhook.
         */
     },
     onClose: function () {
@@ -86,7 +84,7 @@ let config = {
         response: { checkoutTransactionId: 75455457879vjh566 }
         /**
             Save this checkoutTransactionId to your database so as to
-            be able to use it to make webhook notification.
+            be able to use it to listen to webhook notification after onSuccess is emitted.
         **/
     }
   };
@@ -120,10 +118,14 @@ function generateUniqueSessionId(length) {
 ## Final Step: Notification
 We send notifications for events that occur during the customer checkout process via a webhook notification system. Below are the events that can occur during the checkout process:
 
-`Checkout_Customer_Payment_Completed`: Customer completed the checkout process 🎉 and is redirected back to the merchant store provide link 
+`Checkout_Customer_Payment_Completed`: Customer completed the checkout process 🎉.
 
 `Checkout_Merchant_Payment_Completed`: Payment has been successful made to the merchant store
 
 And that's all!!! You are all set. 
+
+
+## Reference
+[Checkout Webhook Verification](https://developer.lendastack.io/products-guide/webhooks/webhooks-verification)
 
 
