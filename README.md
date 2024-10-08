@@ -2,40 +2,46 @@
 
 Welcome to the documentation for integrating with our Checkout Lending Buy-Now-Pay-Later (BNPL) service. This service allows merchants to send transactions securely and encrypted to our BNPL checkout service. This document provides an overview of the process and details on how to use our APIs.
 
-
 ## Step 1: Get your api keys
+
 Get your merchant private and public keys from your dashboard.
 
-
 ## Step 2: Update your html
+
 - Copy the checkout.min.js script tag and paste just before the close of body tag.
+
 ```
 <script src="https://checkout.creditdirect.ng/bnpl/checkout.min.js" type="application/javascript"></script>
 ```
+
 - Add an extra button to your checkout page with a click function.
+
 ```
 <button class="custom-class" onclick="openCheckout()">Launch Checkout</button>
 ```
 
 ## Step 3: Sign your transaction on your server
+
 Here is a sample JS function to sign your transaction on your server using your private key
 
 ```javascript
 function signTransaction(transaction) {
-    const privateKey = 'YOUR_PRIVATE_KEY';
-    const sm = transaction.sessionId + transaction.customerEmail + transaction.totalAmount;
-    const st = signTransactionRequest(sm, privateKey);
-    return st;
-  }
+  const privateKey = "YOUR_PRIVATE_KEY";
+  const sm =
+    transaction.sessionId + transaction.customerEmail + transaction.totalAmount;
+  const st = signTransactionRequest(sm, privateKey);
+  return st;
+}
 
-  function signTransactionRequest(message, privateKey) {
-    const key = CryptoJS.enc.Utf8.parse(privateKey);
-    const messageData = CryptoJS.enc.Utf8.parse(message);
-    const signature = CryptoJS.enc.Hex.stringify(CryptoJS.HmacSHA256(messageData, key));
-    return signature;
-  }
+function signTransactionRequest(message, privateKey) {
+  const key = CryptoJS.enc.Utf8.parse(privateKey);
+  const messageData = CryptoJS.enc.Utf8.parse(message);
+  const signature = CryptoJS.enc.Hex.stringify(
+    CryptoJS.HmacSHA256(messageData, key)
+  );
+  return signature;
+}
 ```
-
 
 ## Step 4: Initialise Checkout in your checkout page js script
 
@@ -49,6 +55,7 @@ const transaction = {
     "customerEmail": "test1@example.com",
     "customerPhone": "234",
     "sessionId": generateUniqueSessionId(15),
+    "metaData": "",
     "products": [
         {
             "productName": "Iphone",
@@ -71,8 +78,8 @@ let config = {
     transaction: transaction,
     isLive: false,
     onSuccess: function () {
-      /** 
-        send this checkoutTransactionId back to your server to listen to 
+      /**
+        send this checkoutTransactionId back to your server to listen to
          payout notification with webhook.
         */
     },
@@ -116,16 +123,72 @@ function generateUniqueSessionId(length) {
 ```
 
 ## Final Step: Notification
+
 We send notifications for events that occur during the customer checkout process via a webhook notification system. Below are the events that can occur during the checkout process:
 
 `Checkout_Customer_Payment_Completed`: Customer completed the checkout process 🎉.
+#### Sample Response
+```javascript
+   {
+      "checkoutCustomer":
+        {
+          "firstName": "John",
+          "lastName": "Doe"
+        },
+      "checkoutTransactionId": "75455457879vjh566",
+      "eventType": "Checkout_Merchant_Payment_Completed",
+      "metaData": null,
+      "products": [
+        {
+          "productAmount": "400",
+          "productId": "2",
+          "productName": "Iphone"
+        },
+        {
+          "productAmount": "200",
+          "productId": "3",
+          "productName": "Iphone 2"
+        }
+      ],
+      "timeStamp": "2024-10-08T15:04:49.842987+00:00"
+    }
+
+```
 
 `Checkout_Merchant_Payment_Completed`: Payment has been successful made to the merchant store
 
-And that's all!!! You are all set. 
+#### Sample Response
 
+``` javascript
+    {
+      "checkoutCustomer":
+        {
+          "firstName": "John",
+          "lastName": "Doe"
+        },
+      "checkoutTransactionId": "75455457879vjh566",
+      "eventType": "Checkout_Customer_Payment_Completed",
+      "metaData": null,
+      "products": [
+        {
+          "productAmount": "400",
+          "productId": "2",
+          "productName": "Iphone"
+        },
+        {
+          "productAmount": "200",
+          "productId": "3",
+          "productName": "Iphone 2"
+        }
+      ],
+      "timeStamp": "2024-10-08T15:04:46.5988149+00:00"
+    }
+
+
+```
+
+And that's all!!! You are all set.
 
 ## Reference
+
 [Checkout Webhook Verification](https://developer.lendastack.io/products-guide/webhooks/webhooks-verification.)
-
-

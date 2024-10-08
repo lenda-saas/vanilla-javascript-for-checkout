@@ -4,6 +4,7 @@ const transaction = {
   "customerEmail": "test1@example.com",
   "customerPhone": "234",
   "sessionId": generateUniqueSessionId(15),
+  "metaData": "",
   "products": [
       {
           "productName": "Iphone",
